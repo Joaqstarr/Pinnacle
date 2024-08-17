@@ -5,6 +5,11 @@ namespace SupabaseScripts
 {
     public class SupabaseManager : MonoBehaviour
     {
+        public delegate void ObjectDataDel(ObjectData[] objects);
+
+        public static ObjectDataDel ObjectDataReceived;
+            
+        
         private SupabaseClient _client;
         private void Start()
         {
@@ -17,7 +22,7 @@ namespace SupabaseScripts
             
             _client = new SupabaseClient(keys.GetKey(), keys.GetUrl(), "");
             ObjectData[] objectData = await _client.GetObjectData();
-            
+            ObjectDataReceived(objectData);
         }
     }
 }
