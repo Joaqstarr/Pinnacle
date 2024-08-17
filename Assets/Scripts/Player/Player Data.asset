@@ -23,8 +23,10 @@ MonoBehaviour:
   <groundLayers>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
-  <maxGrabHoldDistance>k__BackingField: 4
+  <maxGrabHoldDistance>k__BackingField: 3
   <climbLayers>k__BackingField:
     serializedVersion: 2
     m_Bits: 64
   <climbMoveSpeed>k__BackingField: {x: 10, y: 20}
+  <ledgeGrabPos>k__BackingField: {x: 0, y: 2, z: 1.2}
+  <ledgeGrabDistance>k__BackingField: 2

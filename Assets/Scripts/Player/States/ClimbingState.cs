@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Player.States
@@ -15,13 +16,16 @@ namespace Player.States
 
         public override void OnEnterState()
         {
+            Controls.JumpPressed += OnAttemptMantle;
             CheckArmHolds();
 
         }
 
         public override void OnExitState()
         {
-            
+            Controls.JumpPressed -= OnAttemptMantle;
+            DisconnectLeftArm();
+            DisconnectRightArm();
         }
 
         public override void OnUpdateState()
@@ -100,6 +104,41 @@ namespace Player.States
                 if(arm.isAttached)
                     DisconnectArm(arm);
             }
+        }
+
+        private void OnAttemptMantle()
+        {
+            LedgeGrabResult result = CheckLedgeGrab();
+            if (result.isValid)
+            {
+                Player.transform.DOMove(result.position + Data.ledgeGrabExitOffset, 0.5f);
+                Player.ChangeToMovementState();
+            }
+        }
+        private LedgeGrabResult CheckLedgeGrab()
+        {
+            Vector3 ledgePos = Player.transform.TransformPoint(Data.ledgeGrabPos);
+
+            if (Physics.Raycast(ledgePos, Vector3.down, out RaycastHit hit, Data.ledgeGrabDistance, Data.groundLayers))
+            {
+                return new LedgeGrabResult
+                {
+                    isValid = true,
+                    position = hit.point
+                };
+            }
+
+            return new LedgeGrabResult
+            {
+                isValid = false,
+                position = Vector3.zero
+            };
+        }
+
+        struct LedgeGrabResult
+        {
+            public bool isValid;
+            public Vector3 position;
         }
     }
 }

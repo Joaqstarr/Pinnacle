@@ -74,7 +74,14 @@ namespace Player
         private void OnDrawGizmos()
         {
             if (!_drawGizmos) return;
+            Gizmos.color = Color.white;
             Gizmos.DrawSphere(transform.position + _data.groundCheckPos, 0.1f);
+            
+            Gizmos.color = Color.red;
+            Vector3 ledgePos = transform.TransformPoint(_data.ledgeGrabPos);
+            Gizmos.DrawSphere(ledgePos, 0.1f);
+            Gizmos.DrawRay(ledgePos, Vector3.down * _data.ledgeGrabDistance);
+            
         }
 
         public Climbable CheckForClimbable()
