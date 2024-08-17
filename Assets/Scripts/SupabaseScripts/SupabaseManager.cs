@@ -5,10 +5,19 @@ namespace SupabaseScripts
 {
     public class SupabaseManager : MonoBehaviour
     {
-        public SupabaseClient Client;
+        private SupabaseClient _client;
         private void Start()
         {
-           // Client = new SupabaseClient();
+            InitializeSupabase();
+        }
+
+        private async void InitializeSupabase()
+        {
+            ApiKeys.ApiKeyStruct keys = ApiKeys.PublicGetApiKeys();
+            
+            _client = new SupabaseClient(keys.GetKey(), keys.GetUrl(), "");
+            ObjectData[] objectData = await _client.GetObjectData();
+            
         }
     }
 }

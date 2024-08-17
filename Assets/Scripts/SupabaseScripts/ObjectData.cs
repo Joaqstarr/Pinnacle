@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace SupabaseScripts
 {
+    [Table("InstantiatedObjects")]
     public class ObjectData : BaseModel
     {
         [PrimaryKey("id")] public string Id { get; set; }

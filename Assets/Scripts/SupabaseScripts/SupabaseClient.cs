@@ -1,3 +1,7 @@
+using System;
+using System.Collections;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace SupabaseScripts
@@ -18,11 +22,16 @@ namespace SupabaseScripts
             _url = url;
             _serverCode = serverCode;
 
-            CreateClient();
-
+            InitializeSupabase();
         }
 
-        private async void CreateClient()
+        private async void InitializeSupabase()
+        {
+            await CreateClient();
+            SignInAnonymously();
+        }
+
+        private async Task<bool> CreateClient()
         {
             Supabase.SupabaseOptions options = new Supabase.SupabaseOptions
             {
@@ -32,23 +41,44 @@ namespace SupabaseScripts
             Supabase.Client supabase = new Supabase.Client(_url, _key, options);
             await supabase.InitializeAsync();
             _supabase = supabase;
+
+            return true;
         }
 
-        public async void GetObjectData()
+        private async void SignInAnonymously()
         {
             if (_supabase == null)
             {
-                Debug.LogWarning("Supabase client not created yet when attempting object retrieval.");
+                Debug.LogError("Supabase not initialized yet when attempting to sign in anonymously");
                 return;
             }
 
+            await _supabase.Auth.SignInAnonymously();
+        }
+        public async Task<ObjectData[]> GetObjectData()
+        {
+            int timeOutCount = 0;
+            while (_supabase == null)
+            {
+                await Task.Delay(100);
+
+                
+                if (timeOutCount > 20)
+                {
+                    Debug.LogError("Supabase not initialized yet when attempting fetch");
+                    return Array.Empty<ObjectData>();
+                }
+
+                timeOutCount++;
+            };
+
             var results = await _supabase.From<ObjectData>()
-                .Where(x => x.GameKey != _serverCode)
+                .Where(x => x.GameKey == _serverCode)
                 .Get();
 
-            Debug.LogWarning(results);
+            return results.Models.ToArray();
         }
 
-
+        
     }
 }
