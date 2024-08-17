@@ -52,8 +52,8 @@ namespace SupabaseScripts
                 Debug.LogError("Supabase not initialized yet when attempting to sign in anonymously");
                 return;
             }
-
             await _supabase.Auth.SignInAnonymously();
+
         }
         public async Task<ObjectData[]> GetObjectData()
         {
