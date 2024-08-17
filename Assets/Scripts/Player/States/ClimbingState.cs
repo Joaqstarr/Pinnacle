@@ -1,4 +1,5 @@
 ﻿using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Player.States
 {
@@ -6,7 +7,7 @@ namespace Player.States
     {
         private Arm _leftArm;
         private Arm _rightArm;
-        public ClimbingState(PlayerBrain player, PlayerControls controls, PlayerData data, Arm leftArm, Arm rightArm) : base(player, controls, data)
+        public ClimbingState(PlayerBrain player, PlayerControls controls, PlayerData data, Rigidbody rb, Arm leftArm, Arm rightArm) : base(player, controls, data, rb)
         {
             _leftArm = leftArm;
             _rightArm = rightArm;
@@ -27,8 +28,22 @@ namespace Player.States
         {
             Player.CameraMovement();
             CheckArmHolds();
+            
         }
 
+        public override void OnFixedUpdateState()
+        {
+            Movement();
+        }
+
+
+        private void Movement()
+        {
+            Vector3 forceToApply = (Player.transform.up * (Controls.moveInput.y * Data.climbMoveSpeed.y)) +
+                                   (Player.transform.right * (Controls.moveInput.x * Data.climbMoveSpeed.x));
+            
+            Rb.AddForce(forceToApply, ForceMode.Force);
+        }
         private void ConnectArm(Arm arm, Climbable hold)
         {
             arm.AttachToHold(hold);

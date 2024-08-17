@@ -30,7 +30,7 @@ namespace Player
             
             //State setup
             _movementState = new MovementState(this, _controls, _data,_rb);
-            _climbState = new ClimbingState(this, _controls, _data, leftArm, rightArm);
+            _climbState = new ClimbingState(this, _controls, _data, _rb,leftArm, rightArm);
         }
 
         // Start is called before the first frame update
@@ -46,6 +46,11 @@ namespace Player
         void Update()
         {
             _currentState.OnUpdateState();
+        }
+
+        private void FixedUpdate()
+        {
+            _currentState.OnFixedUpdateState();
         }
 
         public void ChangeToState(BaseState newState)

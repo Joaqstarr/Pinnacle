@@ -4,12 +4,10 @@ namespace Player.States
 {
     public class MovementState : BaseState
     {
-        private readonly Rigidbody _rb;
         private bool _isGrounded = false;
         private float _bonusGrav = 0;
-        public MovementState(PlayerBrain player, PlayerControls controls, PlayerData data,Rigidbody rb) : base(player, controls, data)
+        public MovementState(PlayerBrain player, PlayerControls controls, PlayerData data,Rigidbody rb) : base(player, controls, data, rb)
         {
-            _rb = rb;
         }
 
         public override void OnEnterState()
@@ -29,14 +27,20 @@ namespace Player.States
             {
                 if (Player.CheckForClimbable() != null)
                 {
-                    Player.ChangeToClimbingState();   
+                    Player.ChangeToClimbingState();  
                     return;
                 }
                 
             }
             _isGrounded = GroundCheck();
-            Move();
+            
             Player.CameraMovement();
+            
+        }
+
+        public override void OnFixedUpdateState()
+        {
+            Move();
             Gravity();
         }
 
@@ -49,12 +53,12 @@ namespace Player.States
             }
 
             _bonusGrav = Mathf.Lerp(_bonusGrav, Data.gravity, Time.deltaTime * Data.bonusGravitySpeed);
-            _rb.AddForce(Vector3.up * _bonusGrav, ForceMode.Force);
+            Rb.AddForce(Vector3.up * _bonusGrav, ForceMode.Force);
         }
 
         private void Move()
         {
-            Vector3 currrentVelocity = _rb.velocity;
+            Vector3 currrentVelocity = Rb.velocity;
             Vector3 targetVelocity = new Vector3(Controls.moveInput.x, 0, Controls.moveInput.y);
             targetVelocity *= Data.moveSpeed * 10;
 
@@ -75,7 +79,7 @@ namespace Player.States
 
             velocityChange *= Time.deltaTime;
 
-            _rb.AddForce(velocityChange, mode);
+            Rb.AddForce(velocityChange, mode);
            
             
         }
@@ -92,9 +96,9 @@ namespace Player.States
         private void Jump()
         {
             if(!_isGrounded) return;
-            _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+            Rb.velocity = new Vector3(Rb.velocity.x, 0f, Rb.velocity.z);
 
-            _rb.AddForce(Player.transform.up * Data.jumpStrength, ForceMode.Impulse);
+            Rb.AddForce(Player.transform.up * Data.jumpStrength, ForceMode.Impulse);
         }
 
 

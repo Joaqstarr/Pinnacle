@@ -24,9 +24,10 @@ namespace Player
         [field: SerializeField] public LayerMask groundLayers { get; private set; }
 
         [field: Header("Climbing")]
-        [field: SerializeField]
-        public float maxGrabHoldDistance { get; private set; } = 2;
+        [field: SerializeField] public float maxGrabHoldDistance { get; private set; } = 2;
         [field: SerializeField] public LayerMask climbLayers { get; private set; }
+        [field: SerializeField] public Vector2 climbMoveSpeed { get; private set; } = new Vector2(5, 10);
+
 
 
     }
