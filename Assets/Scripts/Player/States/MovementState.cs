@@ -32,7 +32,7 @@ namespace Player.States
                 }
                 
             }
-            _isGrounded = GroundCheck();
+            _isGrounded = Player.GroundCheck();
             
             Player.CameraMovement();
             
@@ -84,15 +84,7 @@ namespace Player.States
             
         }
 
-        private bool GroundCheck()
-        {
-             Collider[] result = Physics.OverlapSphere(Player.transform.position + Data.groundCheckPos, 0.1f, Data.groundLayers);
-             if (result.Length == null) return false;
 
-             if (result.Length == 0) return false;
-             return true;
-
-        }
         private void Jump()
         {
             if(!_isGrounded) return;

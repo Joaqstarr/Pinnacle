@@ -28,7 +28,12 @@ namespace Player.States
         {
             Player.CameraMovement();
             CheckArmHolds();
-            
+
+            if (Player.GroundCheck() && !_leftArm.isAttached && !_rightArm.isAttached)
+            {
+                Player.ChangeToMovementState();
+                return;
+            }
         }
 
         public override void OnFixedUpdateState()

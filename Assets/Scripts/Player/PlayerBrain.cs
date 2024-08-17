@@ -116,6 +116,16 @@ namespace Player
             headPos.eulerAngles = curRot;
 
         }
+        
+        public bool GroundCheck()
+        {
+            Collider[] result = Physics.OverlapSphere(transform.position + _data.groundCheckPos, 0.1f, _data.groundLayers);
+            if (result.Length == null) return false;
+
+            if (result.Length == 0) return false;
+            return true;
+
+        }
     }
 }
 

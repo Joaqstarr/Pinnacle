@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 [System.Serializable]
 public class Arm : MonoBehaviour
@@ -11,6 +13,8 @@ public class Arm : MonoBehaviour
     private Transform _parent;
     private SpringJoint _joint;
     private Rigidbody _player;
+
+    [SerializeField] private ChainIKConstraint _ikConstraint;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,14 +35,16 @@ public class Arm : MonoBehaviour
         _joint.connectedBody = _player;
         _attachedHold = hold;
         transform.position = _attachedHold.transform.position;
-        
+        DOVirtual.Float(_ikConstraint.weight, 1, 0.4f, (x) => { _ikConstraint.weight = x; }).SetEase(Ease.OutCirc);
     }
 
     public void LetGo()
     {
         transform.parent = _parent;
-        transform.localPosition = Vector3.zero;
+        //transform.localPosition = Vector3.zero;
         _joint.connectedBody = null;
+
+        DOVirtual.Float(_ikConstraint.weight, 0, 0.4f, (x) => { _ikConstraint.weight = x; }).SetEase(Ease.OutCirc);
 
     }
 
