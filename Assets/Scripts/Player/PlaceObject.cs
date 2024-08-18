@@ -48,7 +48,11 @@ public class PlaceObject : MonoBehaviour
     {
         _buildMode = false;
         _controls.PlacePressed -= TryPlaceObject;
-
+        if (_objectToPlace)
+        {
+            _objectToPlace.DeSpawn();
+            _objectToPlace = null;
+        }
     }
 
     public void PreviewObject()
