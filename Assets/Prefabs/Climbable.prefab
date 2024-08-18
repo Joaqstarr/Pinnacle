@@ -13,12 +13,13 @@ GameObject:
   - component: {fileID: 4860655775483101558}
   - component: {fileID: 3262961506531342350}
   - component: {fileID: 8564289875870626943}
+  - component: {fileID: 5042137795601366463}
   m_Layer: 6
   m_Name: Climbable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 125
   m_IsActive: 1
 --- !u!4 &8307273633492373541
 Transform:
@@ -118,3 +119,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93402c301156cd349ac8200e5dceb619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!205 &5042137795601366463
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8172788235995039458}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 1
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4860655775483101558}
+  - screenRelativeHeight: 0.19343828
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4860655775483101558}
+  - screenRelativeHeight: 0.01782748
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4860655775483101558}
+  - screenRelativeHeight: 0.006561142
+    fadeTransitionWidth: 0.112
+    renderers:
+    - renderer: {fileID: 4860655775483101558}
+  m_Enabled: 1

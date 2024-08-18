@@ -76,3 +76,6 @@ crashlytics-build.properties
 
 #Sensitive
 ApiKeys.txt
+
+*.blend
+*.blend1

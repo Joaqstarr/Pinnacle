@@ -28,5 +28,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   <climbMoveSpeed>k__BackingField: {x: 10, y: 20}
+  <climbJumpStength>k__BackingField: 25
   <ledgeGrabPos>k__BackingField: {x: 0, y: 2, z: 1.2}
   <ledgeGrabDistance>k__BackingField: 2
+  <ledgeGrabExitOffset>k__BackingField: {x: 0, y: 1, z: 0}

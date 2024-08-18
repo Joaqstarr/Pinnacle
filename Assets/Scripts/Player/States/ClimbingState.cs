@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Collections;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -26,6 +27,7 @@ namespace Player.States
             Controls.JumpPressed -= OnAttemptMantle;
             DisconnectLeftArm();
             DisconnectRightArm();
+            EnterNormalTime();
         }
 
         public override void OnUpdateState()
@@ -96,8 +98,11 @@ namespace Player.States
             if (input)
             {
                 if(hold != null)
-                    if(!arm.isAttached)
+                    if (!arm.isAttached)
+                    {
                         ConnectArm(arm, hold);
+                        EnterNormalTime();
+                    }
             }
             else
             {
@@ -114,6 +119,37 @@ namespace Player.States
                 Player.transform.DOMove(result.position + Data.ledgeGrabExitOffset, 0.5f);
                 Player.ChangeToMovementState();
             }
+            else
+            {
+                Jump();    
+            }
+        }
+
+        private void Jump()
+        {
+            if (!_leftArm.isAttached && !_rightArm.isAttached) return;
+            
+            DisconnectLeftArm();
+            DisconnectRightArm();
+
+            Vector3 dir = Player.transform.right * Controls.moveInput.x + Player.transform.up * Controls.moveInput.y;
+            
+            Rb.AddForce(dir * Data.jumpStrength, ForceMode.Impulse);
+            
+            //TODO time manager
+            Time.timeScale = 0.3f;
+            Player.StartCoroutine(ResetTimeScale());
+            IEnumerator ResetTimeScale()
+            {
+                yield return new WaitForSeconds(2f);
+                EnterNormalTime();
+            }
+        }
+
+        private void EnterNormalTime()
+        {
+            if (Time.timeScale == 0.3f) 
+                Time.timeScale = 1.0f;
         }
         private LedgeGrabResult CheckLedgeGrab()
         {

@@ -88,7 +88,12 @@ namespace Player
         {
             Debug.DrawRay(headPos.position, headPos.forward, Color.cyan);
             if (!Physics.Raycast(headPos.position, headPos.forward, out RaycastHit hit, _data.maxGrabHoldDistance,
-                    _data.climbLayers)) return null;
+                    _data.climbLayers))
+            {
+                
+
+                return null;
+            }
             Climbable hold = hit.transform.GetComponent<Climbable>();
             return hold;
         }
