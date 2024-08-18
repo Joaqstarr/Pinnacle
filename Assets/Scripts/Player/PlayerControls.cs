@@ -18,6 +18,7 @@ namespace Player
         public delegate void ButtonPressed();
 
         public ButtonPressed JumpPressed;
+        public ButtonPressed BuildPressed;
 
         
         public void OnMove(InputValue value)
@@ -38,6 +39,11 @@ namespace Player
         public void OnLeftArm(InputValue value)
         {
             leftArmPressed = value.isPressed;
+        }
+
+        public void OnBuild(InputValue value)
+        {
+            BuildPressed?.Invoke();
         }
         public void OnRightArm(InputValue value)
         {

@@ -24,5 +24,9 @@ namespace Player.States
         
         public abstract void OnFixedUpdateState();
 
+        public abstract void OnEnterBuildMode();
+
+        public abstract void OnExitBuildMode();
+
     }
 }

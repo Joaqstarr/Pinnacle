@@ -13,6 +13,7 @@ namespace Player.States
         public override void OnEnterState()
         {
             Controls.JumpPressed += Jump;
+            
         }
 
         public override void OnExitState()
@@ -23,25 +24,43 @@ namespace Player.States
 
         public override void OnUpdateState()
         {
-            if (Controls.leftArmPressed || Controls.rightArmPressed)
-            {
-                if (Player.CheckForClimbable() != null)
-                {
-                    Player.ChangeToClimbingState();  
-                    return;
-                }
-                
-            }
+            if (CheckHandHolds()) return;
+            
             _isGrounded = Player.GroundCheck();
             
             Player.CameraMovement();
             
         }
 
+        private bool CheckHandHolds()
+        {
+            if(!Player.isBuildModeEnabled)
+                if (Controls.leftArmPressed || Controls.rightArmPressed)
+                {
+                    if (Player.CheckForClimbable() != null)
+                    {
+                        Player.ChangeToClimbingState();
+                        return true;
+                    }
+                    
+                }
+
+            return false;
+        }
+
         public override void OnFixedUpdateState()
         {
             Move();
             Gravity();
+        }
+
+        public override void OnEnterBuildMode()
+        {
+        }
+
+        public override void OnExitBuildMode()
+        {
+            
         }
 
         private void Gravity()
@@ -87,6 +106,7 @@ namespace Player.States
 
         private void Jump()
         {
+            if(Player.isBuildModeEnabled) return;
             if(!_isGrounded) return;
             Rb.velocity = new Vector3(Rb.velocity.x, 0f, Rb.velocity.z);
 

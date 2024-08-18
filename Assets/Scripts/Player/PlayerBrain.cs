@@ -21,7 +21,8 @@ namespace Player
         private BaseState _movementState;
         private BaseState _climbState;
 
-
+        public bool isBuildModeEnabled{ get; private set; } = false;
+        
         [SerializeField] private bool _drawGizmos = true;
         private void Awake()
         {
@@ -137,6 +138,38 @@ namespace Player
             if (result.Length == 0) return false;
             return true;
 
+        }
+
+        private void ToggleBuildMode()
+        {
+            if (isBuildModeEnabled)
+            {
+                DisableBuildMode();
+            }
+            else
+            {
+                EnableBuildMode();
+            }
+        }
+
+        private void EnableBuildMode()
+        {
+            isBuildModeEnabled = true;
+            _currentState.OnEnterBuildMode();
+        }
+        private void DisableBuildMode()
+        {
+            isBuildModeEnabled = false;
+            _currentState.OnExitBuildMode();
+        }
+        private void OnEnable()
+        {
+            _controls.BuildPressed += ToggleBuildMode;
+        }
+
+        private void OnDisable()
+        {
+            _controls.BuildPressed -= ToggleBuildMode;
         }
     }
 }

@@ -28,7 +28,9 @@ namespace Player
         [field: SerializeField] public LayerMask climbLayers { get; private set; }
         [field: SerializeField] public Vector2 climbMoveSpeed { get; private set; } = new Vector2(5, 10);
         [field: SerializeField] public float climbJumpStength { get; private set; } = 15;
-        
+        [field: SerializeField] public float climbJumpTimeScale { get; private set; } = 0.4f;
+        [field: SerializeField] public float climbJumpSlowdownLength { get; private set; } = 2f;
+
         [field: Header("Mantle")]
         [field: SerializeField] public Vector3 ledgeGrabPos { get; private set; }
         [field: SerializeField] public float ledgeGrabDistance { get; private set; } = 2;

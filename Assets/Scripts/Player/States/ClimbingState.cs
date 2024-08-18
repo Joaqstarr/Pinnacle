@@ -9,6 +9,8 @@ namespace Player.States
     {
         private Arm _leftArm;
         private Arm _rightArm;
+        private bool _enabledBuild = false;
+
         public ClimbingState(PlayerBrain player, PlayerControls controls, PlayerData data, Rigidbody rb, Arm leftArm, Arm rightArm) : base(player, controls, data, rb)
         {
             _leftArm = leftArm;
@@ -18,6 +20,7 @@ namespace Player.States
         public override void OnEnterState()
         {
             Controls.JumpPressed += OnAttemptMantle;
+            _enabledBuild = false;
             CheckArmHolds();
 
         }
@@ -33,9 +36,10 @@ namespace Player.States
         public override void OnUpdateState()
         {
             Player.CameraMovement();
-            CheckArmHolds();
+            if(!Player.isBuildModeEnabled)
+                CheckArmHolds();
 
-            if (Player.GroundCheck() && !_leftArm.isAttached && !_rightArm.isAttached)
+            if (Player.GroundCheck() && IsLetgo())
             {
                 Player.ChangeToMovementState();
                 return;
@@ -47,13 +51,31 @@ namespace Player.States
             Movement();
         }
 
+        public override void OnEnterBuildMode()
+        {
+            _enabledBuild = true;
+
+        }
+
+        public override void OnExitBuildMode()
+        {
+            
+        }
+
 
         private void Movement()
         {
-            Vector3 forceToApply = (Player.transform.up * (Controls.moveInput.y * Data.climbMoveSpeed.y)) +
+            
+            Vector3 forwardDir = (IsLetgo())? Player.transform.forward : Player.transform.up;
+            Vector3 forceToApply = (forwardDir* (Controls.moveInput.y * Data.climbMoveSpeed.y)) +
                                    (Player.transform.right * (Controls.moveInput.x * Data.climbMoveSpeed.x));
             
             Rb.AddForce(forceToApply, ForceMode.Force);
+        }
+
+        private bool IsLetgo()
+        {
+            return !_leftArm.isAttached && !_rightArm.isAttached;
         }
         private void ConnectArm(Arm arm, Climbable hold)
         {
@@ -98,16 +120,20 @@ namespace Player.States
             if (input)
             {
                 if(hold != null)
-                    if (!arm.isAttached)
+                    if (!arm.isAttached || _enabledBuild)
                     {
+                        _enabledBuild = false;
                         ConnectArm(arm, hold);
                         EnterNormalTime();
                     }
             }
             else
             {
-                if(arm.isAttached)
+                if (arm.isAttached &&  !_enabledBuild)
+                {
                     DisconnectArm(arm);
+
+                }
             }
         }
 
@@ -133,23 +159,37 @@ namespace Player.States
             DisconnectRightArm();
 
             Vector3 dir = Player.transform.right * Controls.moveInput.x + Player.transform.up * Controls.moveInput.y;
-            
-            Rb.AddForce(dir * Data.jumpStrength, ForceMode.Impulse);
+            if (dir.magnitude == 0)
+            {
+                dir = Player.transform.up;
+            }
+            Rb.AddForce(dir * Data.climbJumpStength, ForceMode.Impulse);
             
             //TODO time manager
-            Time.timeScale = 0.3f;
+            EnterSlowTime();
+            
             Player.StartCoroutine(ResetTimeScale());
             IEnumerator ResetTimeScale()
             {
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(Data.climbJumpSlowdownLength);
                 EnterNormalTime();
             }
         }
 
+        private void EnterSlowTime()
+        {
+            Time.timeScale = Data.climbJumpTimeScale;
+            Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        }
         private void EnterNormalTime()
         {
-            if (Time.timeScale == 0.3f) 
+            if (Time.timeScale == Data.climbJumpTimeScale)
+            {
                 Time.timeScale = 1.0f;
+
+                Time.fixedDeltaTime = Time.timeScale * 0.02f;
+
+            }
         }
         private LedgeGrabResult CheckLedgeGrab()
         {
