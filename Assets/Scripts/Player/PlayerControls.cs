@@ -19,6 +19,7 @@ namespace Player
 
         public ButtonPressed JumpPressed;
         public ButtonPressed BuildPressed;
+        public ButtonPressed PlacePressed;
 
         
         public void OnMove(InputValue value)
@@ -44,6 +45,11 @@ namespace Player
         public void OnBuild(InputValue value)
         {
             BuildPressed?.Invoke();
+        }
+
+        public void OnPlace(InputValue value)
+        {
+            PlacePressed?.Invoke();
         }
         public void OnRightArm(InputValue value)
         {

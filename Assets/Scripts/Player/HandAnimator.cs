@@ -26,10 +26,12 @@ public class HandAnimator : MonoBehaviour
         {
             _fingers[i].defaultPos = transform.InverseTransformPoint(_fingers[i].ik.data.tip.transform.position);
             GameObject obj = new GameObject("fingerTarget");
-            GameObject spawnedObject = GameObject.Instantiate(obj, transform.TransformPoint(_fingers[i].defaultPos), quaternion.identity, transform);
+            obj.transform.position = transform.TransformPoint(_fingers[i].defaultPos);
+            obj.transform.rotation = Unity.Mathematics.quaternion.identity;
+            obj.transform.SetParent( transform);
 
-            _fingers[i].ik.data.target = spawnedObject.transform;
-            _fingers[i].target = spawnedObject.transform;
+            _fingers[i].ik.data.target = obj.transform;
+            _fingers[i].target = obj.transform;
         }
     }
 

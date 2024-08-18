@@ -14,7 +14,8 @@ namespace Player
         [field: SerializeField]public Transform headPos { get; private set; }
         [field: SerializeField]public Arm leftArm { get; private set; }
         [field: SerializeField]public Arm rightArm { get; private set; }
-        
+        private PlaceObject _buildSystem ; 
+
         //state stuff 
         private BaseState _currentState;
         //States
@@ -28,7 +29,8 @@ namespace Player
         {
             _controls = GetComponent<PlayerControls>();
             _rb = GetComponent<Rigidbody>();
-            
+            _buildSystem = GetComponent<PlaceObject>();
+            _buildSystem.Initialize(_data, _controls,headPos);
             //State setup
             _movementState = new MovementState(this, _controls, _data,_rb);
             _climbState = new ClimbingState(this, _controls, _data, _rb,leftArm, rightArm);
@@ -87,7 +89,7 @@ namespace Player
 
         public Climbable CheckForClimbable()
         {
-            Debug.DrawRay(headPos.position, headPos.forward, Color.cyan);
+            //Debug.DrawRay(headPos.position, headPos.forward, Color.cyan);
             if (!Physics.Raycast(headPos.position, headPos.forward, out RaycastHit hit, _data.maxGrabHoldDistance,
                     _data.climbLayers))
             {
@@ -156,11 +158,13 @@ namespace Player
         {
             isBuildModeEnabled = true;
             _currentState.OnEnterBuildMode();
+            _buildSystem.EnterBuildMode();
         }
         private void DisableBuildMode()
         {
             isBuildModeEnabled = false;
             _currentState.OnExitBuildMode();
+            _buildSystem.ExitBuildMode();
         }
         private void OnEnable()
         {
