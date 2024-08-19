@@ -87,7 +87,21 @@ namespace Player
             
         }
 
-        public Climbable CheckForClimbable()
+        public struct ClimbableData
+        {
+            public ClimbableData(Climbable newHold, Vector3 grabPos, Vector3 normal)
+            {
+                this.hold = newHold;
+                this.grabPosition = grabPos;
+                normalDir = normal;
+            }
+
+            public Climbable hold { get; }
+            public Vector3 grabPosition { get; }
+            public Vector3 normalDir { get; }
+
+        }
+        public ClimbableData CheckForClimbable()
         {
             //Debug.DrawRay(headPos.position, headPos.forward, Color.cyan);
             if (!Physics.Raycast(headPos.position, headPos.forward, out RaycastHit hit, _data.maxGrabHoldDistance,
@@ -95,10 +109,10 @@ namespace Player
             {
                 
 
-                return null;
+                return new ClimbableData(null, Vector3.zero, Vector3.one);
             }
             Climbable hold = hit.transform.GetComponent<Climbable>();
-            return hold;
+            return new ClimbableData(hold, hit.point,hit.normal);
         }
 
 

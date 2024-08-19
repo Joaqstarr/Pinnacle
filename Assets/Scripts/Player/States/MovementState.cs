@@ -37,7 +37,7 @@ namespace Player.States
             if(!Player.isBuildModeEnabled)
                 if (Controls.leftArmPressed || Controls.rightArmPressed)
                 {
-                    if (Player.CheckForClimbable() != null)
+                    if (Player.CheckForClimbable().hold != null)
                     {
                         Player.ChangeToClimbingState();
                         return true;

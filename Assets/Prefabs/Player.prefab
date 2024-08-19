@@ -245,7 +245,7 @@ Transform:
   m_GameObject: {fileID: 721561213893003589}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.064, z: 0.147}
+  m_LocalPosition: {x: -0, y: -0.022, z: 0.223}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -720,7 +720,7 @@ Transform:
   m_GameObject: {fileID: 5320353795621093085}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.064, z: 0.147}
+  m_LocalPosition: {x: 0, y: -0.022, z: 0.223}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -774,6 +774,8 @@ MonoBehaviour:
   _spawnable: {fileID: 257229024316955140, guid: 8d20ce64590c3af44a6e6c1565e91157,
     type: 3}
   _amountToPool: 25
+  _placeableDistance: 10
+  _cooldownInMinutes: 10
 --- !u!1 &5762747393726130693
 GameObject:
   m_ObjectHideFlags: 0

@@ -78,9 +78,9 @@ namespace Player.States
         {
             return !_leftArm.isAttached && !_rightArm.isAttached;
         }
-        private void ConnectArm(Arm arm, Climbable hold)
+        private void ConnectArm(Arm arm, PlayerBrain.ClimbableData holdData)
         {
-            arm.AttachToHold(hold);
+            arm.AttachToHold(holdData);
         }
 
         private void DisconnectArm(Arm arm)
@@ -97,34 +97,34 @@ namespace Player.States
         {
             DisconnectArm(_rightArm);
         }
-        private void ConnectLeftArm(Climbable hold)
+        private void ConnectLeftArm(PlayerBrain.ClimbableData hold)
         {
             ConnectArm(_leftArm, hold);
         }
-        private void ConnectRightArm(Climbable hold)
+        private void ConnectRightArm(PlayerBrain.ClimbableData hold)
         {
             ConnectArm(_rightArm, hold);
         }
 
         private void CheckArmHolds()
         {
-            Climbable hold = Player.CheckForClimbable();
+            PlayerBrain.ClimbableData holdData = Player.CheckForClimbable();
             
-            CheckArm(_leftArm, Controls.leftArmPressed, hold);
+            CheckArm(_leftArm, Controls.leftArmPressed, holdData);
             
-            CheckArm(_rightArm, Controls.rightArmPressed, hold);
+            CheckArm(_rightArm, Controls.rightArmPressed, holdData);
 
         }
 
-        private void CheckArm(Arm arm, bool input, Climbable hold)
+        private void CheckArm(Arm arm, bool input, PlayerBrain.ClimbableData holdData)
         {
             if (input)
             {
-                if(hold != null)
+                if(holdData.hold != null)
                     if (!arm.isAttached || _enabledBuild)
                     {
                         _enabledBuild = false;
-                        ConnectArm(arm, hold);
+                        ConnectArm(arm, holdData);
                         EnterNormalTime();
                     }
             }
