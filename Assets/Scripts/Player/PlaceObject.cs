@@ -89,7 +89,7 @@ public class PlaceObject : MonoBehaviour
         {
             return;
         }
-        _objectToPlace.Place(hit);
+        _objectToPlace.Place(hit, transform.position);
         ObjectPlaced?.Invoke(_objectToPlace);
         _objectToPlace = null;
     }

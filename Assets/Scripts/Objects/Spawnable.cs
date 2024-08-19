@@ -17,7 +17,7 @@ namespace Objects
             transform.LookAt(hit.point);
         }
 
-        public void Place(RaycastHit hit)
+        public virtual void Place(RaycastHit hit, Vector3 playerLocation)
         {
             PreviewLocation(hit);
             
