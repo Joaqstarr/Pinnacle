@@ -74,10 +74,10 @@ namespace SupabaseScripts
                 return;
             }
             var result = await _supabase.Auth.SignInAnonymously();
-            await CreateNewUser(result.User.Id);
+            //await CreateNewUser(result.User.Id);
             if (_userId.IsNullOrEmpty())
             {
-                //CreateNewUser(result.User.Id);
+                CreateNewUser(result.User.Id);
                 //CreateNewUser(result.User.Id);
 
             }
@@ -114,7 +114,7 @@ namespace SupabaseScripts
         private async Task<string> CreateNewUser(String id)
         {;
             _userId = id;
-            //PlayerPrefs.SetString("playerid", _userId);
+            PlayerPrefs.SetString("playerid", _userId);
 
             UserRow userCreated = new UserRow()
             {
@@ -187,8 +187,8 @@ namespace SupabaseScripts
                 RotationX = rotEuler.x,
                 RotationY = rotEuler.y,
                 RotationZ = rotEuler.z,
-                //Creator = _userId,
-                Creator = _supabase.Auth.CurrentUser.Id,
+                Creator = _userId,
+                //Creator = _supabase.Auth.CurrentUser.Id,
                 ObjectInfo = placedObject.GetObjectInfo()
             };
             Debug.LogError(_userId + ", " + _supabase.Auth.CurrentUser.Id);
