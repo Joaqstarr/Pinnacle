@@ -49,6 +49,7 @@ namespace Player.States
         public override void OnFixedUpdateState()
         {
             Movement();
+             
         }
 
         public override void OnEnterBuildMode()

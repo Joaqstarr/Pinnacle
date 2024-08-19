@@ -6,7 +6,11 @@ using UnityEngine;
 
 public class PlaceObject : MonoBehaviour
 {
+    public delegate void PlaceObjectDel(Spawnable objectPlaced);
 
+    public static PlaceObjectDel ObjectPlaced;
+    
+    
     [SerializeField]private SpawnableInfo _equipped;
     private PlayerControls _controls;
 
@@ -79,8 +83,8 @@ public class PlaceObject : MonoBehaviour
         {
             return;
         }
-        
         _objectToPlace.Place(hit);
+        ObjectPlaced?.Invoke(_objectToPlace);
         _objectToPlace = null;
     }
 

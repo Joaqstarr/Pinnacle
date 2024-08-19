@@ -4,7 +4,7 @@ namespace Objects
 {
     public class Spawnable : MonoBehaviour
     {
-
+        [SerializeField] private string _name;
         [SerializeField] private float _distanceFromGround;
         
         public void PreviewLocation(RaycastHit hit)
@@ -41,6 +41,12 @@ namespace Objects
         private Vector3 CalculatePositionWithOffsetFromNormal(Vector3 position, Vector3 normal)
         {
             return position + (normal * _distanceFromGround);
+        }
+
+        public string getName => _name;
+        public string GetObjectInfo()
+        {
+            return "";
         }
     }
 }

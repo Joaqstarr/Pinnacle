@@ -152,4 +152,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 238f7a36c86d4905b1d37db5d2fff33d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _name: Zipline
   _distanceFromGround: 1

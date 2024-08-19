@@ -1,4 +1,5 @@
-﻿using Supabase.Postgrest.Attributes;
+﻿using System;
+using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace SupabaseScripts
     public class ObjectData : BaseModel
     {
         [PrimaryKey("id")] public string Id { get; set; }
+        [Column("created_at")] public DateTime timeCreated { get; set; }
 
         [Column("GameKey")] public string GameKey { get; set; }
 
@@ -15,6 +17,7 @@ namespace SupabaseScripts
         [Column("ObjectType")] public string ObjectType { get; set; }
         [Column("ObjectData")] public string ObjectInfo { get; set; }
 
+        [Column("Creator")] public string Creator { get; set; }
 
         //Transform
 

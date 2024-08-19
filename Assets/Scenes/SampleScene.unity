@@ -432,6 +432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnableObjects:
   - {fileID: 11400000, guid: 3b10a615d1b86b84282416378e6a937f, type: 2}
+  - {fileID: 11400000, guid: 839a25b5b11fbbe43b47bf246ec3a17c, type: 2}
 --- !u!4 &278145557
 Transform:
   m_ObjectHideFlags: 0
