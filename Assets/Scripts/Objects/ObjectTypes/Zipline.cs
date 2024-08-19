@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Objects.ObjectTypes
 {
@@ -15,7 +16,7 @@ namespace Objects.ObjectTypes
 
         }
 
-        private void MoveOtherSide(Vector3 newPos)
+        public void MoveOtherSide(Vector3 newPos)
         {
             _otherSide.position = newPos;
 
@@ -26,6 +27,31 @@ namespace Objects.ObjectTypes
             Vector3 newScale = _rope.transform.localScale;
             newScale.z = Vector3.Distance(newPos, transform.position)/2;
             _rope.transform.localScale = newScale;
+        }
+        
+        public override string GetObjectInfo()
+        {
+            return JsonConvert.SerializeObject(new SerializableVector(_otherSide.transform.position));
+        }
+
+        [System.Serializable]
+        public class SerializableVector
+        {
+            public float x;
+            public float y;
+            public float z;
+
+            public Vector3 GetValue()
+            {
+                return new Vector3(x, y, z);
+            }
+
+            public SerializableVector(Vector3 pos)
+            {
+                x = pos.x;
+                y = pos.y;
+                z = pos.z;
+            }
         }
     }
 }

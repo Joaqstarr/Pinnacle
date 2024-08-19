@@ -2078,8 +2078,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5935937017924025006, guid: d329915f16f250e4e82ebe602763f6f8,
         type: 3}
+      propertyPath: _spawnable
+      value: 
+      objectReference: {fileID: 1448864902561562105, guid: 8d20ce64590c3af44a6e6c1565e91157,
+        type: 3}
+    - target: {fileID: 5935937017924025006, guid: d329915f16f250e4e82ebe602763f6f8,
+        type: 3}
       propertyPath: _cooldownInMinutes
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5935937017924025006, guid: d329915f16f250e4e82ebe602763f6f8,
         type: 3}

@@ -44,7 +44,7 @@ namespace Objects
         }
 
         public string getName => _name;
-        public string GetObjectInfo()
+        public virtual string GetObjectInfo()
         {
             return "";
         }

@@ -61,7 +61,6 @@ public class PlaceObject : MonoBehaviour
 
     public void PreviewObject()
     {
-        Debug.Log(_equipped.CanSpawn());
         if (!_equipped.CanSpawn())
         {
             return;
