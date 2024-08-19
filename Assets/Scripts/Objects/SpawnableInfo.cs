@@ -1,4 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json;
+using Objects.ObjectTypes;
 using SupabaseScripts;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -67,15 +69,34 @@ namespace Objects
              }
          }
 
+         private void OnSpawnObject(String objType, Vector3 pos, Quaternion rot, String data)
+         {
+             if(!objType.Contains(_name))return;
+
+             Spawnable objectSpawned = GetObject();
+             objectSpawned.Spawn(pos, rot);
+             
+
+             if (objType.Contains("Zipline"))
+             {
+                 Zipline asZip = (Zipline)objectSpawned;
+                 
+                 Vector3 otherside = JsonConvert.DeserializeObject<Zipline.SerializableVector>(data).GetValue();
+                 asZip.MoveOtherSide(otherside);
+                 
+             }
+         }
          private void OnEnable()
          {
              SupabaseClient.UpdateCooldown += UpdateCooldown;
+             SupabaseClient.SpawnObj += OnSpawnObject;
          }
 
          private void OnDisable()
          {
              SupabaseClient.UpdateCooldown -= UpdateCooldown;
-             
+             SupabaseClient.SpawnObj -= OnSpawnObject;
+
          }
     }
 }

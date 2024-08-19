@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Objects;
 using Supabase.Gotrue;
+using Supabase.Realtime.Interfaces;
+using Supabase.Realtime.PostgresChanges;
 using UnityEngine;
 
 namespace SupabaseScripts
@@ -15,7 +17,10 @@ namespace SupabaseScripts
     {
         //Events
         public delegate void UpdateCooldownDel(String objType, DateTimeOffset startingTime);
+        public delegate void SpawnObjectDel(String objType, Vector3 pos, Quaternion rot ,String data);
 
+        public static SpawnObjectDel SpawnObj;
+        
         public static UpdateCooldownDel UpdateCooldown;
         
         //Supabase
@@ -241,6 +246,35 @@ namespace SupabaseScripts
             [JsonProperty("checkpoint")]
             public ObjectFoundWithDate checkpoint;
         }
-        
+
+        private async void SubscribeToObjectStream()
+        {
+            var clientExist = await WaitForClientTimeOut();
+            if (!clientExist)
+            {
+                Debug.LogError("Supabase not initialized yet when attempting subscription");
+                
+                return;
+                
+            }
+
+            var channel = _supabase.Realtime.Channel("realtime", "public", "InstantiatedObjects");
+            channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates,
+                (IRealtimeChannel sender, PostgresChangesResponse change) =>
+                {
+
+
+                    ObjectData objToSpawn = change.Model<ObjectData>();
+                    SpawnObj?.Invoke(objToSpawn.ObjectType, objToSpawn.GetPosition(), objToSpawn.GetRotation(),
+                        objToSpawn.ObjectInfo);
+                });
+
+            
+            await channel.Subscribe();
+            
+            
+        }
+
+
     }
 }

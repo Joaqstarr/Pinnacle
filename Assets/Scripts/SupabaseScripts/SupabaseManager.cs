@@ -1,6 +1,4 @@
-﻿using System;
-using Objects;
-using UnityEditor.ShaderGraph.Drawing;
+﻿using Objects;
 using UnityEngine;
 
 namespace SupabaseScripts
