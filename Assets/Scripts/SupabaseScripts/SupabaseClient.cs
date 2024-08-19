@@ -8,7 +8,10 @@ using Objects;
 using Supabase.Gotrue;
 using Supabase.Realtime.Interfaces;
 using Supabase.Realtime.PostgresChanges;
+using Unity.VisualScripting;
 using UnityEngine;
+using Constants = Supabase.Realtime.Constants;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SupabaseScripts
 {
@@ -45,6 +48,8 @@ namespace SupabaseScripts
         {
             await CreateClient();
             SignInAnonymously();
+            SubscribeToObjectStream();
+
         }
 
         private async Task<bool> CreateClient()
@@ -69,10 +74,12 @@ namespace SupabaseScripts
                 return;
             }
             var result = await _supabase.Auth.SignInAnonymously();
-
+            await CreateNewUser(result.User.Id);
             if (_userId.IsNullOrEmpty())
             {
-                CreateNewUser(result.User.Id);
+                //CreateNewUser(result.User.Id);
+                //CreateNewUser(result.User.Id);
+
             }
             else
             {
@@ -90,7 +97,7 @@ namespace SupabaseScripts
                 .Get();
 
             string modifiedContent = data.Content.Substring(1, data.Content.Length - 2);
-
+            if(modifiedContent.IsNullOrEmpty())return;
             var jObject = JObject.Parse(modifiedContent);
             var zipline = JsonConvert.DeserializeObject<ObjectFoundWithDate>(jObject["zipline"].ToString());
             if (zipline != null)
@@ -104,17 +111,19 @@ namespace SupabaseScripts
             }
 
         }
-        private async void CreateNewUser(String id)
+        private async Task<string> CreateNewUser(String id)
         {;
             _userId = id;
-            PlayerPrefs.SetString("playerid", _userId);
+            //PlayerPrefs.SetString("playerid", _userId);
 
             UserRow userCreated = new UserRow()
             {
-                Id = _userId
+                Id = id
             };
             
+            
             await _supabase.From<UserRow>().Insert(userCreated);
+            return _userId;
 
         }
         public async Task<ObjectData[]> GetObjectData()
@@ -178,9 +187,11 @@ namespace SupabaseScripts
                 RotationX = rotEuler.x,
                 RotationY = rotEuler.y,
                 RotationZ = rotEuler.z,
-                Creator = _userId,
+                //Creator = _userId,
+                Creator = _supabase.Auth.CurrentUser.Id,
                 ObjectInfo = placedObject.GetObjectInfo()
             };
+            Debug.LogError(_userId + ", " + _supabase.Auth.CurrentUser.Id);
             var result = await _supabase.From<ObjectData>().Insert(rowToInsert);
             
             
@@ -259,19 +270,27 @@ namespace SupabaseScripts
             }
 
             var channel = _supabase.Realtime.Channel("realtime", "public", "InstantiatedObjects");
-            channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates,
+            /*
+            channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.All,
                 (IRealtimeChannel sender, PostgresChangesResponse change) =>
                 {
+                    
 
-
-                    ObjectData objToSpawn = change.Model<ObjectData>();
-                    SpawnObj?.Invoke(objToSpawn.ObjectType, objToSpawn.GetPosition(), objToSpawn.GetRotation(),
-                        objToSpawn.ObjectInfo);
                 });
+            */
+            
+            await _supabase.From<ObjectData>().On(PostgresChangesOptions.ListenType.Inserts, (sender, change) =>
+            {
 
+                ObjectData objToSpawn = change.Model<ObjectData>();
+                Debug.Log("TABLE CHANGED " +objToSpawn.ObjectType);
+
+                SpawnObj?.Invoke(objToSpawn.ObjectType, objToSpawn.GetPosition(), objToSpawn.GetRotation(),
+                    objToSpawn.ObjectInfo);
+            });
             
             await channel.Subscribe();
-            
+            Debug.Log("subscribed");
             
         }
 

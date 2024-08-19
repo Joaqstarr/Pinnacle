@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Newtonsoft.Json;
 using Objects.ObjectTypes;
 using SupabaseScripts;
@@ -16,14 +17,33 @@ namespace Objects
          [SerializeField] private float _placeableDistance = 10;
          [SerializeField] private float _cooldownInMinutes = 10;
          private float _cooldownTimer;
+
+         private struct SpawnObjectData
+         {
+             public string ObjectType;
+             public Spawnable ObjectToSpawn;
+             public Vector3 Pos;
+             public Quaternion Rot;
+             public string ExtraData;
+
+         }
+         private Queue _spawnObjectQueue;
          private void Awake()
          {
+             _spawnObjectQueue = new Queue();
              CreatePool();
          }
 
          private void Update()
          {
              _cooldownTimer += Time.unscaledDeltaTime;
+
+             while (_spawnObjectQueue.Count > 0)
+             {
+                 SpawnObjectData data = (SpawnObjectData)_spawnObjectQueue.Dequeue();
+                 SpawnObject(data.ObjectType, data.Pos, data.Rot, data.ExtraData, data.ObjectToSpawn);
+
+             }
          }
 
          private void CreatePool()
@@ -40,7 +60,19 @@ namespace Objects
 
          public Spawnable GetObject()
          {
-             return _objectPool.GetSpawnable();
+             Spawnable toSpawn = null;
+             try
+             {
+                 toSpawn = _objectPool.GetSpawnable();
+                 return toSpawn;
+
+             }
+             catch (UnityEngine.UnityException exception)
+             {
+                 Debug.Log("Exception thrown when getting object: " + exception.Message + "\n" + exception.StackTrace);
+             }
+
+             return toSpawn;
          }
 
          public float SpawnRange
@@ -71,11 +103,28 @@ namespace Objects
 
          private void OnSpawnObject(String objType, Vector3 pos, Quaternion rot, String data)
          {
-             if(!objType.Contains(_name))return;
+             Debug.Log("Attempt spawn of " + objType + " at pos " + pos + " with other side at " + data);
+             if(!objType.Equals(_name))return;
 
              Spawnable objectSpawned = GetObject();
-             objectSpawned.Spawn(pos, rot);
              
+             Debug.Log(objectSpawned.getName);
+
+             SpawnObjectData objectSpawn = new SpawnObjectData
+             {
+                 ObjectType = objType,
+                 Pos = pos,
+                 Rot = rot,
+                 ObjectToSpawn = objectSpawned,
+                 ExtraData = data
+             };
+             _spawnObjectQueue.Enqueue(objectSpawn);
+         }
+
+         private static void SpawnObject(string objType, Vector3 pos, Quaternion rot, string data, Spawnable objectSpawned)
+         {
+             objectSpawned.Spawn(pos, rot);
+
 
              if (objType.Contains("Zipline"))
              {
@@ -86,6 +135,7 @@ namespace Objects
                  
              }
          }
+
          private void OnEnable()
          {
              SupabaseClient.UpdateCooldown += UpdateCooldown;

@@ -6,11 +6,12 @@ namespace Objects
     {
         [SerializeField] private string _name;
         [SerializeField] private float _distanceFromGround;
-        
+        private bool _isSpawned = false;
         public void PreviewLocation(RaycastHit hit)
         {
             if (!gameObject.activeSelf)
             {
+                _isSpawned = true;
                 gameObject.SetActive(true);
             }
             transform.position = CalculatePositionWithOffsetFromNormal(hit.point, hit.normal);
@@ -28,6 +29,7 @@ namespace Objects
         {
             transform.position = location;
             transform.rotation = transform.rotation;
+            _isSpawned = true;
             gameObject.SetActive(true);
             
             //todo enable collisions and functions
@@ -35,6 +37,7 @@ namespace Objects
 
         public void DeSpawn()
         {
+            _isSpawned = false;
             gameObject.SetActive(false);
         }
 
@@ -48,5 +51,14 @@ namespace Objects
         {
             return "";
         }
+
+        public bool Active
+        {
+            get
+            {
+                return _isSpawned;
+            }
+        }
+        
     }
 }

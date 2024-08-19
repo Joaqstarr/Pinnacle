@@ -35,8 +35,10 @@ namespace Objects
         {
             for (int i = 0; i < _pool.Count; i++)
             {
-                if (!_pool[i].gameObject.activeSelf)
+                bool active = _pool[i].Active;
+                if (!active)
                 {
+                    Debug.Log(i);
                     return _pool[i];
                 }
             }
