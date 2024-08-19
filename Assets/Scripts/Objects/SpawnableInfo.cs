@@ -21,7 +21,6 @@ namespace Objects
          private struct SpawnObjectData
          {
              public string ObjectType;
-             public Spawnable ObjectToSpawn;
              public Vector3 Pos;
              public Quaternion Rot;
              public string ExtraData;
@@ -41,7 +40,7 @@ namespace Objects
              while (_spawnObjectQueue.Count > 0)
              {
                  SpawnObjectData data = (SpawnObjectData)_spawnObjectQueue.Dequeue();
-                 SpawnObject(data.ObjectType, data.Pos, data.Rot, data.ExtraData, data.ObjectToSpawn);
+                 SpawnObject(data.ObjectType, data.Pos, data.Rot, data.ExtraData, GetObject());
 
              }
          }
@@ -106,16 +105,13 @@ namespace Objects
              Debug.Log("Attempt spawn of " + objType + " at pos " + pos + " with other side at " + data);
              if(!objType.Equals(_name))return;
 
-             Spawnable objectSpawned = GetObject();
              
-             Debug.Log(objectSpawned.getName);
 
              SpawnObjectData objectSpawn = new SpawnObjectData
              {
                  ObjectType = objType,
                  Pos = pos,
                  Rot = rot,
-                 ObjectToSpawn = objectSpawned,
                  ExtraData = data
              };
              _spawnObjectQueue.Enqueue(objectSpawn);
