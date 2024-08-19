@@ -1955,6 +1955,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5935937017924025006, guid: d329915f16f250e4e82ebe602763f6f8,
         type: 3}
+      propertyPath: _cooldownInMinutes
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5935937017924025006, guid: d329915f16f250e4e82ebe602763f6f8,
+        type: 3}
       propertyPath: _placeableDistance
       value: 20
       objectReference: {fileID: 0}

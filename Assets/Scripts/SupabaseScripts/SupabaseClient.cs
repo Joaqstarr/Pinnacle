@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Objects;
 using Supabase.Gotrue;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace SupabaseScripts
     public class SupabaseClient
     {
         //Events
-        public delegate void UpdateCooldownDel(String objType, DateTime startingTime);
+        public delegate void UpdateCooldownDel(String objType, DateTimeOffset startingTime);
 
         public static UpdateCooldownDel UpdateCooldown;
         
@@ -83,12 +84,20 @@ namespace SupabaseScripts
                 .Where((x) => (x.Id == _userId))
                 .Get();
 
-            
-            var result = JsonConvert.DeserializeObject<ObjectCooldownReturn[]>(data.Content);
+            string modifiedContent = data.Content.Substring(1, data.Content.Length - 2);
 
-            Debug.Log(JsonUtility.ToJson(result )+ ", " + data.Content);
-            //Debug.Log(result[0].zipline.created_at +",\n" + result[0].checkpoint.created_at);
-            
+            var jObject = JObject.Parse(modifiedContent);
+            var zipline = JsonConvert.DeserializeObject<ObjectFoundWithDate>(jObject["zipline"].ToString());
+            if (zipline != null)
+            {
+                UpdateCooldown?.Invoke("Zipline", zipline.created_at);
+            }
+            var checkpoint = JsonConvert.DeserializeObject<ObjectFoundWithDate>(jObject["checkpoint"].ToString());
+            if (checkpoint != null)
+            {
+                UpdateCooldown?.Invoke("Checkpoint", checkpoint.created_at);
+            }
+
         }
         private async void CreateNewUser(String id)
         {;
@@ -155,6 +164,7 @@ namespace SupabaseScripts
             var rowToInsert = new ObjectData()
             {
                 GameKey = _serverCode,
+                timeCreated = DateTimeOffset.UtcNow,
                 ObjectType = placedObject.getName,
                 PositionX = pos.x,
                 PositionY = pos.y,
@@ -184,7 +194,7 @@ namespace SupabaseScripts
 
         private void UpdateLatestZipline(string id)
         {
-            UpdateCooldown?.Invoke("Zipline", DateTime.Now);
+            UpdateCooldown?.Invoke("Zipline", DateTime.UtcNow);
 
             UserRow updatedInfo = new UserRow()
             {
@@ -198,7 +208,7 @@ namespace SupabaseScripts
 
         private void UpdateLatestCheckpoint(string id)
         {
-            UpdateCooldown?.Invoke("Checkpoint", DateTime.Now);
+            UpdateCooldown?.Invoke("Checkpoint", DateTime.UtcNow);
 
             UserRow updatedInfo = new UserRow()
             {
@@ -218,14 +228,19 @@ namespace SupabaseScripts
         [System.Serializable]
         private class ObjectFoundWithDate
         {
-            public DateTime created_at;
+            [JsonProperty("created_at")]
+            [SerializeField]public DateTimeOffset created_at{ get; set; }
         }
         [System.Serializable]
         private class ObjectCooldownReturn
         {
+            [JsonProperty("id")]
             public string id;
+            [JsonProperty("zipline")]
             public ObjectFoundWithDate zipline;
+            [JsonProperty("checkpoint")]
             public ObjectFoundWithDate checkpoint;
         }
+        
     }
 }

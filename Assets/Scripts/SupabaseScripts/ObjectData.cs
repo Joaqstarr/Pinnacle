@@ -9,7 +9,7 @@ namespace SupabaseScripts
     public class ObjectData : BaseModel
     {
         [PrimaryKey("id")] public string Id { get; set; }
-        [Column("created_at")] public DateTime timeCreated { get; set; }
+        [Column("created_at")] public DateTimeOffset timeCreated { get; set; }
 
         [Column("GameKey")] public string GameKey { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using SupabaseScripts;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -58,19 +59,22 @@ namespace Objects
              }
          }
 
-         private void UpdateCooldown(String objType, DateTime startingTime)
+         private void UpdateCooldown(String objType, DateTimeOffset startingTime)
          {
-             if(objType.Contains(_name))
-                _cooldownTimer = (float)(DateTime.Now - startingTime).TotalSeconds;
+             if (objType.Contains(_name))
+             {
+                 _cooldownTimer = (float)DateTime.UtcNow.Subtract(startingTime.DateTime).TotalSeconds;
+             }
          }
 
          private void OnEnable()
          {
-             
+             SupabaseClient.UpdateCooldown += UpdateCooldown;
          }
 
          private void OnDisable()
          {
+             SupabaseClient.UpdateCooldown -= UpdateCooldown;
              
          }
     }

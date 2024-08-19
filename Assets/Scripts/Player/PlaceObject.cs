@@ -61,6 +61,11 @@ public class PlaceObject : MonoBehaviour
 
     public void PreviewObject()
     {
+        Debug.Log(_equipped.CanSpawn());
+        if (!_equipped.CanSpawn())
+        {
+            return;
+        }
         if (_objectToPlace == null)
         {
             _objectToPlace = _equipped.GetObject();
@@ -79,6 +84,7 @@ public class PlaceObject : MonoBehaviour
 
     public void TryPlaceObject()
     {
+        if(!_equipped.CanSpawn())return;
         if(!IsValidLocation(out RaycastHit hit))
         {
             return;
