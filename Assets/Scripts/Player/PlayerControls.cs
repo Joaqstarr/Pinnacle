@@ -20,6 +20,8 @@ namespace Player
         public ButtonPressed JumpPressed;
         public ButtonPressed BuildPressed;
         public ButtonPressed PlacePressed;
+        public ButtonPressed ZiplinePressed;
+        public ButtonPressed CheckpointPressed;
 
         
         public void OnMove(InputValue value)
@@ -54,6 +56,16 @@ namespace Player
         public void OnRightArm(InputValue value)
         {
             rightArmPressed = value.isPressed;
+        }
+
+        public void OnCheckpoint(InputValue value)
+        {
+            CheckpointPressed?.Invoke();
+        }
+
+        public void OnZipline(InputValue value)
+        {
+            ZiplinePressed?.Invoke();
         }
         private void Start()
         {

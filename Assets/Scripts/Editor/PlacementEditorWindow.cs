@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utilities;
+using Random = UnityEngine.Random;
 
 
 public class PlacementEditorWindow : EditorWindow
@@ -70,10 +71,15 @@ public class PlacementEditorWindow : EditorWindow
                     pos.y = terrain.terrainData.GetInterpolatedHeight(pos.x / terrain.terrainData.size.x,
                         pos.z / (float)terrain.terrainData.size.y);
 
+                    Vector3 eulerRot = new Vector3(UnityEngine.Random.Range(-180, 180), UnityEngine.Random.Range(-180, 180),
+                    UnityEngine.Random.Range(-180, 180));
 
-          
-                    GameObject go = Instantiate(prefab, pos, quaternion.identity);
+
+                    float ranScale = Random.Range(0.9f, 2f);
+                    GameObject go = Instantiate(prefab, pos, Quaternion.Euler(eulerRot));
+                    go.transform.localScale = go.transform.localScale * ranScale;
                     go.transform.SetParent(parent);
+                    
                 }
             }
         }
@@ -95,8 +101,10 @@ public class PlacementEditorWindow : EditorWindow
             terrain.terrainData.GetSteepness(x / terrain.terrainData.size.x, z / terrain.terrainData.size.z);
         if (steepness < 40)
         {
-            fitness -= 0.7f;
+            fitness -= 1f;
         }
+
+        fitness += Random.Range(-0.25f,0);
         return fitness;
     }
     

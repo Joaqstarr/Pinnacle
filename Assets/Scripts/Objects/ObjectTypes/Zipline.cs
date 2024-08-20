@@ -5,8 +5,17 @@ namespace Objects.ObjectTypes
 {
     public class Zipline : Spawnable
     {
+        [SerializeField] private Transform _mainSide;
+
         [SerializeField] private Transform _otherSide;
         [SerializeField] private Transform _rope;
+
+
+        public override void PreviewLocation(RaycastHit hit)
+        {
+            base.PreviewLocation(hit);
+            MoveOtherSide(hit.point);
+        }
 
         public override void Place(RaycastHit hit, Vector3 playerLocation)
         {
@@ -20,9 +29,14 @@ namespace Objects.ObjectTypes
         {
             _otherSide.position = newPos;
 
-            _rope.position = (newPos + transform.position) / 2;
+            
+            Vector3 midPoint = (newPos + transform.position) / 2;
+            _rope.position = midPoint;
             
             _rope.LookAt(newPos);
+            
+            _mainSide.LookAt(midPoint);
+            _otherSide.LookAt(midPoint);
 
             Vector3 newScale = _rope.transform.localScale;
             newScale.z = Vector3.Distance(newPos, transform.position)/2;

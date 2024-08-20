@@ -15,8 +15,8 @@ namespace Objects
         [SerializeField] private int _amountToPool;
          private SpawnablePool _objectPool;
          [SerializeField] private float _placeableDistance = 10;
-         [SerializeField] private float _cooldownInMinutes = 10;
-         private float _cooldownTimer;
+         [SerializeField] private float _cooldownInMinutes = 6;
+         private float _cooldownTimer = 0;
 
          private struct SpawnObjectData
          {
@@ -31,6 +31,7 @@ namespace Objects
          {
              _spawnObjectQueue = new Queue();
              CreatePool();
+             _cooldownTimer = cooldownInSeconds - 10;
          }
 
          private void Update()
@@ -143,6 +144,17 @@ namespace Objects
              SupabaseClient.UpdateCooldown -= UpdateCooldown;
              SupabaseClient.SpawnObj -= OnSpawnObject;
 
+         }
+
+         public float GetTimeRatio()
+         {
+             return Mathf.Clamp01(_cooldownTimer / cooldownInSeconds);
+         }
+
+         public TimeSpan GetTimeSpan()
+         {
+             return new TimeSpan(0, 0,
+                 Mathf.RoundToInt(Mathf.Clamp(cooldownInSeconds - _cooldownTimer, 0, cooldownInSeconds)));
          }
     }
 }

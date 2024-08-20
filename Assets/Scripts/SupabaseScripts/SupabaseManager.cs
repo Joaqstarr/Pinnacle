@@ -8,7 +8,8 @@ namespace SupabaseScripts
         public delegate void ObjectDataDel(ObjectData[] objects);
 
         public static ObjectDataDel ObjectDataReceived;
-            
+
+        [SerializeField] private bool _resetPlayerPrefs;
         
         private SupabaseClient _client;
         private void Start()
@@ -18,6 +19,10 @@ namespace SupabaseScripts
 
         private async void InitializeSupabase()
         {
+            if (_resetPlayerPrefs)
+            {
+                PlayerPrefs.SetString("playerid", "");
+            }
 
             string id = PlayerPrefs.GetString("playerid", "");
             ApiKeys.ApiKeyStruct keys = ApiKeys.PublicGetApiKeys();

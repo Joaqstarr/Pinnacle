@@ -191,7 +191,7 @@ namespace SupabaseScripts
                 //Creator = _supabase.Auth.CurrentUser.Id,
                 ObjectInfo = placedObject.GetObjectInfo()
             };
-            Debug.LogError(_userId + ", " + _supabase.Auth.CurrentUser.Id);
+            Debug.Log(_userId + ", " + _supabase.Auth.CurrentUser.Id);
             var result = await _supabase.From<ObjectData>().Insert(rowToInsert);
             
             
@@ -270,17 +270,10 @@ namespace SupabaseScripts
             }
 
             var channel = _supabase.Realtime.Channel("realtime", "public", "InstantiatedObjects");
-            /*
-            channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.All,
-                (IRealtimeChannel sender, PostgresChangesResponse change) =>
-                {
-                    
 
-                });
-            */
-            
             await _supabase.From<ObjectData>().On(PostgresChangesOptions.ListenType.Inserts, (sender, change) =>
             {
+                  
 
                 ObjectData objToSpawn = change.Model<ObjectData>();
                 Debug.Log("TABLE CHANGED " +objToSpawn.ObjectType);

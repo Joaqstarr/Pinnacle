@@ -7,7 +7,7 @@ namespace Objects
         [SerializeField] private string _name;
         [SerializeField] private float _distanceFromGround;
         private bool _isSpawned = false;
-        public void PreviewLocation(RaycastHit hit)
+        public virtual void PreviewLocation(RaycastHit hit)
         {
             if (!gameObject.activeSelf)
             {

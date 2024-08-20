@@ -11,7 +11,7 @@ public class PlaceObject : MonoBehaviour
     public static PlaceObjectDel ObjectPlaced;
     
     
-    [SerializeField]private SpawnableInfo _equipped;
+    private SpawnableInfo _equipped;
     private PlayerControls _controls;
 
     private Transform _headPos;
@@ -20,6 +20,9 @@ public class PlaceObject : MonoBehaviour
 
     private Spawnable _objectToPlace;
     private bool _buildMode = false;
+    [SerializeField] private SpawnableInfo _zipline;
+
+    [SerializeField] private SpawnableInfo _checkpoint;
     public void Initialize(PlayerData data, PlayerControls controls,Transform headPos)
     {
         _headPos = headPos;
@@ -44,14 +47,24 @@ public class PlaceObject : MonoBehaviour
     public void EnterBuildMode()
     {
         _controls.PlacePressed += TryPlaceObject;
+        _controls.ZiplinePressed += EquipZipline;
+        _controls.CheckpointPressed += EquipCheckpoint;
+
         _objectToPlace = null;
         _buildMode = true;
     }
 
     public void ExitBuildMode()
     {
+        _controls.ZiplinePressed -= EquipZipline;
+        _controls.CheckpointPressed -= EquipCheckpoint;
         _buildMode = false;
         _controls.PlacePressed -= TryPlaceObject;
+        DisableObjectToPlace();
+    }
+
+    private void DisableObjectToPlace()
+    {
         if (_objectToPlace)
         {
             _objectToPlace.DeSpawn();
@@ -61,12 +74,15 @@ public class PlaceObject : MonoBehaviour
 
     public void PreviewObject()
     {
+        if(_equipped == null)
+             return;
         if (!_equipped.CanSpawn())
         {
             return;
         }
         if (_objectToPlace == null)
         {
+            
             _objectToPlace = _equipped.GetObject();
         }
         Debug.DrawRay(_headPos.position, _headPos.forward * _equipped.SpawnRange, Color.cyan);
@@ -90,12 +106,25 @@ public class PlaceObject : MonoBehaviour
         }
         _objectToPlace.Place(hit, transform.position);
         ObjectPlaced?.Invoke(_objectToPlace);
-        _objectToPlace = null;
+        DisableObjectToPlace();
     }
 
     private bool IsValidLocation(out RaycastHit hit)
     {
         return Physics.Raycast(_headPos.position, _headPos.forward, out hit, _equipped.SpawnRange,
             _data.groundLayers);
+    }
+
+    private void EquipZipline()
+    {
+        _equipped = _zipline;
+        DisableObjectToPlace();
+    }
+
+    private void EquipCheckpoint()
+    {
+        _equipped = _checkpoint;
+        DisableObjectToPlace();
+
     }
 }
