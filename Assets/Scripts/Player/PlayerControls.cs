@@ -14,6 +14,20 @@ namespace Player
         public bool rightArmPressed{ get; private set; }
         public bool leftArmPressed{ get; private set; }
 
+        [SerializeField] private Vector2 _minMaxSens = new Vector2(0.2f, 3f);
+        private float _mouseSens = 1;
+        private float mouseSens
+        {
+            get
+            {
+                return _mouseSens;
+            }
+            set
+            {
+                _mouseSens = Mathf.Clamp(value, _minMaxSens.x, _minMaxSens.y);
+                PlayerPrefs.SetFloat("sensitivity", _mouseSens);
+            }
+        } 
         //events
         public delegate void ButtonPressed();
 
@@ -32,7 +46,7 @@ namespace Player
 
         public void OnLook(InputValue value)
         {
-            lookInput = value.Get<Vector2>();
+            lookInput = value.Get<Vector2>() * _mouseSens;
             
         }
         public void OnJump(InputValue value)
@@ -73,6 +87,17 @@ namespace Player
         {
             ResetPressed?.Invoke();
         }
+
+        public void OnPlus(InputValue value)
+        {
+            mouseSens = mouseSens +0.1f;
+        }
+        public void OnMinus(InputValue value)
+        {
+            mouseSens = mouseSens - 0.1f;
+            
+            
+        }
         private void Start()
         {
             if (Instance != null)
@@ -82,6 +107,8 @@ namespace Player
             }
 
             Instance = this;
+
+            mouseSens = PlayerPrefs.GetFloat("sensitivity", 1);
         }
     }
 }
