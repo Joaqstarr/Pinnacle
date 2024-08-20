@@ -24,10 +24,11 @@ namespace SupabaseScripts
                 PlayerPrefs.SetString("playerid", "");
             }
 
+            string gameKey = PlayerPrefs.GetString("gameKey", "");
             string id = PlayerPrefs.GetString("playerid", "");
             ApiKeys.ApiKeyStruct keys = ApiKeys.PublicGetApiKeys();
             
-            _client = new SupabaseClient(keys.GetKey(), keys.GetUrl(), "", id);
+            _client = new SupabaseClient(keys.GetKey(), keys.GetUrl(), gameKey, id);
             ObjectData[] objectData = await _client.GetObjectData();
             ObjectDataReceived(objectData);
         }

@@ -34,7 +34,7 @@ namespace Player
         [SerializeField] private bool _drawGizmos = true;
         private void Awake()
         {
-
+            Cursor.lockState = CursorLockMode.Locked;
             _controls = GetComponent<PlayerControls>();
             _rb = GetComponent<Rigidbody>();
             _buildSystem = GetComponent<PlaceObject>();
@@ -113,8 +113,8 @@ namespace Player
         public ClimbableData CheckForClimbable()
         {
             //Debug.DrawRay(headPos.position, headPos.forward, Color.cyan);
-            if (!Physics.Raycast(headPos.position, headPos.forward, out RaycastHit hit, _data.maxGrabHoldDistance,
-                    _data.climbLayers))
+            
+            if (!Physics.SphereCast(headPos.position, 0.05f, headPos.forward, out RaycastHit hit, _data.maxGrabHoldDistance, _data.climbLayers))
             {
                 
 

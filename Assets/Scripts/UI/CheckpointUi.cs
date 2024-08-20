@@ -21,7 +21,7 @@ namespace UI
 
         private void OnDisable()
         {
-            Checkpoint.NewCheckpointSet += OnCheckpointGet;
+            Checkpoint.NewCheckpointSet -= OnCheckpointGet;
             
         }
 

@@ -101,6 +101,12 @@ namespace UI
             PlaceObject.ObjectEquipped += CheckEquipped;
         }
 
+        private void OnDisable()
+        {
+            PlaceObject.ObjectEquipped -= CheckEquipped;
+
+        }
+
         private void CheckEquipped(Spawnable equipped)
         {
             if (_connectedInfo.SpawnablePrefab == equipped)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Environment;
 using Objects;
 using Player;
 using UnityEngine;
@@ -27,6 +28,7 @@ public class PlaceObject : MonoBehaviour
     [SerializeField] private SpawnableInfo _checkpoint;
 
     [SerializeField] private AudioSource _placeSound;
+
     public void Initialize(PlayerData data, PlayerControls controls,Transform headPos)
     {
         _headPos = headPos;
@@ -79,6 +81,8 @@ public class PlaceObject : MonoBehaviour
         {
             return;
         }
+        if (BuildBlocker.Instance.IsBlocked(transform.position)) return;
+
         if (_objectToPlace == null)
         {
             
@@ -86,10 +90,13 @@ public class PlaceObject : MonoBehaviour
         }
         Debug.DrawRay(_headPos.position, _headPos.forward * _equipped.SpawnRange, Color.cyan);
 
+        
         if(!IsValidLocation(out RaycastHit hit))
         {
             return;
         }
+
+        if (BuildBlocker.Instance.IsBlocked(hit.point)) return;
 
         
        _objectToPlace.PreviewLocation(hit);
