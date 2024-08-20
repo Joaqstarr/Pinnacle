@@ -14,7 +14,7 @@ namespace UI
         [SerializeField] private Image _cooldown;
         private TMP_Text _text;
         private RectTransform _textTransform ;
-
+        private RectTransform _rect;
 
         private bool _textEnabled = false;
         private Vector3 _startPos;
@@ -22,7 +22,7 @@ namespace UI
         {
 
             _text = GetComponentInChildren<TMP_Text>();
-            _startPos = getRectTransform.anchoredPosition;
+            _startPos = getTextRectTransform.anchoredPosition;
             EnableText();
         }
 
@@ -55,19 +55,19 @@ namespace UI
             _textEnabled = true;
 
 
-            getRectTransform.DOComplete();
-            getRectTransform.DOLocalMove(_startPos, 0.3f).SetEase(Ease.OutBack);
+            getTextRectTransform.DOComplete();
+            getTextRectTransform.DOLocalMove(_startPos, 0.3f).SetEase(Ease.OutBack);
         }
         private void DisableText()
         {
             _textEnabled = false;
 
 
-            getRectTransform.DOComplete();
-            getRectTransform.DOLocalMove(Vector3.zero, 0.3f).SetEase(Ease.OutBack);
+            getTextRectTransform.DOComplete();
+            getTextRectTransform.DOLocalMove(Vector3.zero, 0.3f).SetEase(Ease.OutBack);
         }
 
-        private RectTransform getRectTransform
+        private RectTransform getTextRectTransform
         {
             get
             {
@@ -78,6 +78,38 @@ namespace UI
             set
             {
                 _textTransform = value;
+            }
+        }
+        private RectTransform getRectTransform
+        {
+            get
+            {
+                if(_rect == null)
+                    _rect = GetComponent<RectTransform>();
+                return _rect;
+            }
+            set
+            {
+                _rect = value;
+            }
+        }
+        
+        private void OnEnable()
+        {
+            PlaceObject.ObjectEquipped += CheckEquipped;
+        }
+
+        private void CheckEquipped(Spawnable equipped)
+        {
+            if (_connectedInfo.SpawnablePrefab == equipped)
+            {
+                getRectTransform.DOComplete();
+                getRectTransform.DOScale(Vector3.one * 1.5f, 0.1f);
+            }
+            else
+            {
+                getRectTransform.DOComplete();
+                getRectTransform.DOScale(Vector3.one, 0.1f);
             }
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Objects;
@@ -9,7 +10,8 @@ public class PlaceObject : MonoBehaviour
     public delegate void PlaceObjectDel(Spawnable objectPlaced);
 
     public static PlaceObjectDel ObjectPlaced;
-    
+    public static PlaceObjectDel ObjectEquipped;
+
     
     private SpawnableInfo _equipped;
     private PlayerControls _controls;
@@ -117,14 +119,21 @@ public class PlaceObject : MonoBehaviour
 
     private void EquipZipline()
     {
-        _equipped = _zipline;
-        DisableObjectToPlace();
+        Equip(_zipline);
     }
 
     private void EquipCheckpoint()
     {
-        _equipped = _checkpoint;
-        DisableObjectToPlace();
 
+        Equip(_checkpoint);
     }
+
+    private void Equip(SpawnableInfo toEquip)
+    {
+        _equipped = toEquip;
+        DisableObjectToPlace();
+        ObjectEquipped?.Invoke(_equipped.SpawnablePrefab);
+    }
+
+
 }

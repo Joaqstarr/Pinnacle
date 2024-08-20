@@ -156,5 +156,13 @@ namespace Objects
              return new TimeSpan(0, 0,
                  Mathf.RoundToInt(Mathf.Clamp(cooldownInSeconds - _cooldownTimer, 0, cooldownInSeconds)));
          }
+
+         public Spawnable SpawnablePrefab
+         {
+             get
+             {
+                 return _spawnable;
+             }
+         }
     }
 }
