@@ -165,6 +165,8 @@ namespace Player.States
                 dir = Player.transform.up;
             }
             Rb.AddForce(dir * Data.climbJumpStength, ForceMode.Impulse);
+            Player.PlayJumpSound();
+            
             
             //TODO time manager
             EnterSlowTime();

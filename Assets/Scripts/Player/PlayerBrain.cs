@@ -14,19 +14,24 @@ namespace Player
         [field: SerializeField]public Transform headPos { get; private set; }
         [field: SerializeField]public Arm leftArm { get; private set; }
         [field: SerializeField]public Arm rightArm { get; private set; }
-        private PlaceObject _buildSystem ; 
-
+        private PlaceObject _buildSystem ;
+        private AudioSource _jumpSource;
+        
+        
         //state stuff 
         private BaseState _currentState;
         //States
         private BaseState _movementState;
         private BaseState _climbState;
 
+        
         public bool isBuildModeEnabled{ get; private set; } = false;
         
         [SerializeField] private bool _drawGizmos = true;
         private void Awake()
         {
+            _jumpSource = GetComponent<AudioSource>();
+
             _controls = GetComponent<PlayerControls>();
             _rb = GetComponent<Rigidbody>();
             _buildSystem = GetComponent<PlaceObject>();
@@ -187,6 +192,11 @@ namespace Player
         private void OnDisable()
         {
             _controls.BuildPressed -= ToggleBuildMode;
+        }
+
+        public void PlayJumpSound()
+        {
+            _jumpSource.Play();
         }
     }
 }
