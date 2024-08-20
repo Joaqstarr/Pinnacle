@@ -1,5 +1,7 @@
 using System;
+using Objects.ObjectTypes;
 using Player.States;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Player
@@ -17,7 +19,8 @@ namespace Player
         private PlaceObject _buildSystem ;
         [SerializeField]
         private AudioSource _jumpSource;
-        
+
+        private Vector3 _setCheckpoint;
         
         //state stuff 
         private BaseState _currentState;
@@ -44,7 +47,8 @@ namespace Player
         // Start is called before the first frame update
         void Start()
         {
-            
+            _setCheckpoint = GetCheckpoint();
+            transform.position = _setCheckpoint;
 
             ChangeToMovementState();
             
@@ -186,14 +190,45 @@ namespace Player
         }
         private void OnEnable()
         {
+            Checkpoint.NewCheckpointSet += SetCheckpoint;
+            _controls.ResetPressed += ReturnToCheckpoint;
+
             _controls.BuildPressed += ToggleBuildMode;
         }
 
         private void OnDisable()
         {
+            Checkpoint.NewCheckpointSet -= SetCheckpoint;
             _controls.BuildPressed -= ToggleBuildMode;
+            _controls.ResetPressed -= ReturnToCheckpoint;
         }
 
+        private void ReturnToCheckpoint()
+        {
+            if (isBuildModeEnabled) return;
+
+            ChangeToMovementState();
+            transform.position = _setCheckpoint;
+        }
+        public void SetCheckpoint(Vector3 pos)
+        {
+            _setCheckpoint = pos;
+            PlayerPrefs.SetFloat("checkX", pos.x);
+            PlayerPrefs.SetFloat("checkY", pos.y);
+            PlayerPrefs.SetFloat("checkZ", pos.z);
+
+        }
+
+        private Vector3 GetCheckpoint()
+        {
+            float x = PlayerPrefs.GetFloat("checkX", transform.position.x);
+            float y = PlayerPrefs.GetFloat("checkY", transform.position.y);
+            float z = PlayerPrefs.GetFloat("checkZ", transform.position.z);
+
+            return new Vector3(x, y, z);
+
+        }
+        
         public void PlayJumpSound()
         {
             _jumpSource.Play();
@@ -206,6 +241,8 @@ namespace Player
                 return _currentState == _climbState;
             }
         }
+        
+        
     }
 }
 

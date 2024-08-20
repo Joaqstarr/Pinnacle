@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 namespace Objects
 {
@@ -7,6 +8,7 @@ namespace Objects
         [SerializeField] private string _name;
         [SerializeField] private float _distanceFromGround;
         private bool _isSpawned = false;
+        [SerializeField] private bool _alwaysFaceUp = false;
         public virtual void PreviewLocation(RaycastHit hit)
         {
             if (!gameObject.activeSelf)
@@ -15,6 +17,8 @@ namespace Objects
                 gameObject.SetActive(true);
             }
             transform.position = CalculatePositionWithOffsetFromNormal(hit.point, hit.normal);
+            transform.eulerAngles = Vector3.zero;
+            if(!_alwaysFaceUp)
             transform.LookAt(hit.point);
         }
 
@@ -28,7 +32,11 @@ namespace Objects
         public void Spawn(Vector3 location, Quaternion rotation)
         {
             transform.position = location;
-            transform.rotation = transform.rotation;
+            if (_alwaysFaceUp)
+            {
+                transform.eulerAngles = Vector3.zero;
+            }else
+                transform.rotation = rotation;
             _isSpawned = true;
             gameObject.SetActive(true);
             

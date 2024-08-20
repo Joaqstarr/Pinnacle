@@ -98,7 +98,10 @@ public class PlaceObject : MonoBehaviour
 
     public void TryPlaceObject()
     {
-        if(!_equipped.CanSpawn())return;
+        if(!_equipped.CanSpawn())
+        { 
+            DisableObjectToPlace();
+        }
         if(!IsValidLocation(out RaycastHit hit))
         {
             return;

@@ -22,6 +22,7 @@ namespace Player
         public ButtonPressed PlacePressed;
         public ButtonPressed ZiplinePressed;
         public ButtonPressed CheckpointPressed;
+        public ButtonPressed ResetPressed;
 
         
         public void OnMove(InputValue value)
@@ -66,6 +67,11 @@ namespace Player
         public void OnZipline(InputValue value)
         {
             ZiplinePressed?.Invoke();
+        }
+
+        public void OnReset(InputValue value)
+        {
+            ResetPressed?.Invoke();
         }
         private void Start()
         {

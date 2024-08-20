@@ -993,6 +993,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _zipline: {fileID: 5935937017924025006}
   _checkpoint: {fileID: 7703004525652041889}
+  _placeSound: {fileID: 8397385324093785978}
 --- !u!82 &-7141721750435213913
 AudioSource:
   m_ObjectHideFlags: 0
