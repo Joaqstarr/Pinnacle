@@ -824,7 +824,7 @@ MonoBehaviour:
   _spawnable: {fileID: 257229024316955140, guid: 8d20ce64590c3af44a6e6c1565e91157,
     type: 3}
   _amountToPool: 25
-  _placeableDistance: 10
+  _placeableDistance: 30
   _cooldownInMinutes: 10
 --- !u!1 &5762747393726130693
 GameObject:

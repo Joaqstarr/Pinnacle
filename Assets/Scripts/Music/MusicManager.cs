@@ -52,7 +52,7 @@ namespace Music
             if (shouldBeEnabled)
             {
                     
-                _climbTrack.volume = Mathf.Lerp(_climbTrack.volume, 1, Time.deltaTime);
+                _climbTrack.volume = Mathf.Lerp(_climbTrack.volume, 1, Time.deltaTime * 0.05f);
             }
             if (!shouldBeEnabled)
             {
