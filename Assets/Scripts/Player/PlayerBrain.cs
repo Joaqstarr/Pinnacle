@@ -198,6 +198,14 @@ namespace Player
         {
             _jumpSource.Play();
         }
+
+        public bool isClimbing
+        {
+            get
+            {
+                return _currentState == _climbState;
+            }
+        }
     }
 }
 
