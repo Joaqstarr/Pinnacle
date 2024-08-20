@@ -18,6 +18,8 @@ namespace UI
 
         private bool _textEnabled = false;
         private Vector3 _startPos;
+        
+        
         private void Start()
         {
 

@@ -2313,6 +2313,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _zipline: {fileID: 1071130130}
   _checkpoint: {fileID: 983533096}
+  _placeSound: {fileID: 0}
 --- !u!114 &2040281140 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1180456723510439843, guid: d329915f16f250e4e82ebe602763f6f8,

@@ -15,6 +15,7 @@ namespace Player
         [field: SerializeField]public Arm leftArm { get; private set; }
         [field: SerializeField]public Arm rightArm { get; private set; }
         private PlaceObject _buildSystem ;
+        [SerializeField]
         private AudioSource _jumpSource;
         
         
@@ -30,7 +31,6 @@ namespace Player
         [SerializeField] private bool _drawGizmos = true;
         private void Awake()
         {
-            _jumpSource = GetComponent<AudioSource>();
 
             _controls = GetComponent<PlayerControls>();
             _rb = GetComponent<Rigidbody>();

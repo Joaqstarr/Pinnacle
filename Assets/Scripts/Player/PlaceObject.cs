@@ -25,16 +25,13 @@ public class PlaceObject : MonoBehaviour
     [SerializeField] private SpawnableInfo _zipline;
 
     [SerializeField] private SpawnableInfo _checkpoint;
+
+    [SerializeField] private AudioSource _placeSound;
     public void Initialize(PlayerData data, PlayerControls controls,Transform headPos)
     {
         _headPos = headPos;
         _data = data;
         _controls = controls;
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
     }
 
     // Update is called once per frame
@@ -109,6 +106,7 @@ public class PlaceObject : MonoBehaviour
         _objectToPlace.Place(hit, transform.position);
         ObjectPlaced?.Invoke(_objectToPlace);
         DisableObjectToPlace();
+        _placeSound.Play();
     }
 
     private bool IsValidLocation(out RaycastHit hit)
